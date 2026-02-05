@@ -29,7 +29,7 @@
             <img src="LOGO_PLN-UL.jpeg" width="180" />
           </div>
 
-          <h4 class="text-center mb-4">Surat Masuk</h4>
+          <h4 class="text-center mb-4">Surat Sanksi</h4>
 
           <input type="date" id="tanggal" class="form-control mb-2" required />
           <input
@@ -79,7 +79,7 @@
           method: "POST",
           mode: "no-cors",
           body: JSON.stringify({
-            role: "admin1",
+            role: "admin2",
             tanggal: tanggal.value,
             nomorSurat: nomorSurat.value,
             tujuan: tujuan.value,
