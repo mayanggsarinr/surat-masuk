@@ -25,7 +25,7 @@
       <div class="card shadow mx-auto" style="max-width: 500px">
         <div class="card-body">
           <div class="text-center mb-3">
-            <img src="l" width="180" />
+            <img src="LOGO_PLN-UL.jpeg" width="180" />
           </div>
 
           <h4 class="text-center mb-4">Surat Masuk</h4>
@@ -85,36 +85,27 @@
 
         btn.disabled = true;
         btn.innerText = "Menyimpan...";
-        alertBox.innerHTML = "";
 
         fetch(API_URL, {
           method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          mode: "no-cors",
           body: JSON.stringify({
-            tanggal: tanggal.value,
-            nomorSurat: nomorSurat.value,
-            tujuan: tujuan.value,
-            keterangan: keterangan.value,
-            evidence: evidence.value,
+            tanggal: document.getElementById("tanggal").value,
+            nomorSurat: document.getElementById("nomorSurat").value,
+            tujuan: document.getElementById("tujuan").value,
+            keterangan: document.getElementById("keterangan").value,
+            evidence: document.getElementById("evidence").value,
           }),
         })
-          .then((res) => res.json())
-          .then((res) => {
-            if (res.status === "success") {
-              alertBox.innerHTML =
-                '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
-            } else {
-              alertBox.innerHTML =
-                '<div class="alert alert-danger">' + res.message + "</div>";
-            }
-          })
-          .catch((err) => {
+          .then(() => {
             alertBox.innerHTML =
-              '<div class="alert alert-danger">❌ Koneksi error</div>';
-            console.error(err);
+              '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
+
+            document.querySelector("form")?.reset();
+          })
+          .catch(() => {
+            alertBox.innerHTML =
+              '<div class="alert alert-danger">❌ Gagal menyimpan</div>';
           })
           .finally(() => {
             btn.disabled = false;
