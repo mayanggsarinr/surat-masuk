@@ -62,28 +62,20 @@
 
         const url =
           API_URL +
-          "?action=login" +
-          "&username=" +
-          encodeURIComponent(username) +
-          "&password=" +
-          encodeURIComponent(password);
+          `?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
 
         fetch(url)
           .then((res) => res.json())
           .then((res) => {
             if (res.status === "success") {
-              window.location.href = "dashboard.html";
+              localStorage.setItem("login", "true");
+              window.location.href = "index.html";
             } else {
-              alertBox.innerHTML =
-                '<div class="alert alert-danger">' +
-                (res.message || "Login gagal") +
-                "</div>";
+              alertBox.innerHTML = `<div class="alert alert-danger">${res.message || "Login gagal"}</div>`;
             }
           })
-          .catch((err) => {
-            console.error(err);
-            alertBox.innerHTML =
-              '<div class="alert alert-danger">Gagal koneksi ke server</div>';
+          .catch(() => {
+            alertBox.innerHTML = `<div class="alert alert-danger">Gagal koneksi ke server</div>`;
           });
       }
     </script>
