@@ -75,6 +75,13 @@
       }
 
       function simpan() {
+        const tanggal = document.getElementById("tanggal");
+        const nomorSurat = document.getElementById("nomorSurat");
+        const tujuan = document.getElementById("tujuan");
+        const keterangan = document.getElementById("keterangan");
+        const evidence = document.getElementById("evidence");
+        const alertBox = document.getElementById("alertBox");
+
         fetch(API_URL, {
           method: "POST",
           mode: "no-cors",
@@ -89,6 +96,16 @@
         }).then(() => {
           alertBox.innerHTML =
             '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
+
+          // RESET INPUT
+          tanggal.value = "";
+          nomorSurat.value = "";
+          tujuan.value = "";
+          keterangan.value = "";
+          evidence.value = "";
+
+          // balik ke input pertama
+          tanggal.focus();
         });
       }
     </script>
