@@ -97,6 +97,9 @@
 
         fetch(URL_API, {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             action: "insert",
             tanggal,
