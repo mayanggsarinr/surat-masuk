@@ -44,6 +44,7 @@
       </div>
     </div>
 
+    <!-- WAJIB: config.js berisi const API_URL -->
     <script src="config.js"></script>
 
     <script>
@@ -54,28 +55,29 @@
 
         alertBox.innerHTML = "";
 
+        // 🔥 INI KUNCI UTAMA (FormData, BUKAN JSON)
+        const formData = new FormData();
+        formData.append("action", "login");
+        formData.append("username", username);
+        formData.append("password", password);
+
         fetch(API_URL, {
           method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: username,
-            password: password,
-          }),
+          body: formData,
         })
           .then((res) => res.json())
           .then((res) => {
+            console.log(res); // DEBUG
+
             if (res.status === "success") {
-              window.location.href = "dashboard.html";
+              window.location.href = "index.html";
             } else {
-              alert(res.message || "Login gagal");
+              alertBox.innerHTML = `<div class="alert alert-danger">❌ Username atau password salah</div>`;
             }
           })
           .catch((err) => {
             console.error(err);
-            alert("Gagal koneksi ke server");
+            alertBox.innerHTML = `<div class="alert alert-danger">❌ Gagal koneksi ke server</div>`;
           });
       }
     </script>
