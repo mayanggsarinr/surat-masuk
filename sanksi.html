@@ -92,6 +92,13 @@
         }).then(() => {
           alertBox.innerHTML =
             '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
+
+          // RESET INPUT SETELAH BERHASIL
+          tanggal.value = "";
+          nomorSurat.value = "";
+          tujuan.value = "";
+          keterangan.value = "";
+          evidence.value = "";
         });
       }
     </script>
