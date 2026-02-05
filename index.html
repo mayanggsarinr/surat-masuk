@@ -95,10 +95,17 @@
         btn.innerText = "Menyimpan...";
 
         fetch(
-          `${URL_API}?action=insert&tanggal=${tanggal}&nomorSurat=${nomorSurat}&tujuan=${tujuan}&keterangan=${keterangan}`,
+          `${API_URL}?action=insert` +
+            `&tanggal=${encodeURIComponent(tanggal)}` +
+            `&nomorSurat=${encodeURIComponent(nomorSurat)}` +
+            `&tujuan=${encodeURIComponent(tujuan)}` +
+            `&keterangan=${encodeURIComponent(keterangan)}`,
         )
           .then((res) => res.json())
           .then((res) => {
+            btn.disabled = false;
+            btn.innerText = "Simpan";
+
             if (res.status === "success") {
               alertBox.innerHTML = `<div class="alert alert-success">✅ Data berhasil disimpan</div>`;
               form.reset();
@@ -107,6 +114,8 @@
             }
           })
           .catch(() => {
+            btn.disabled = false;
+            btn.innerText = "Simpan";
             alertBox.innerHTML = `<div class="alert alert-danger">❌ Error koneksi</div>`;
           });
       });
