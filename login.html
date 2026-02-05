@@ -44,40 +44,46 @@
       </div>
     </div>
 
-    <!-- WAJIB: config.js berisi const API_URL -->
     <script src="config.js"></script>
 
     <script>
       function login() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
         const alertBox = document.getElementById("alertBox");
 
         alertBox.innerHTML = "";
 
-        // 🔥 INI KUNCI UTAMA (FormData, BUKAN JSON)
-        const formData = new FormData();
-        formData.append("action", "login");
-        formData.append("username", username);
-        formData.append("password", password);
+        if (!username || !password) {
+          alertBox.innerHTML =
+            '<div class="alert alert-danger">Username & password wajib diisi</div>';
+          return;
+        }
 
-        fetch(API_URL, {
-          method: "POST",
-          body: formData,
-        })
+        const url =
+          API_URL +
+          "?action=login" +
+          "&username=" +
+          encodeURIComponent(username) +
+          "&password=" +
+          encodeURIComponent(password);
+
+        fetch(url)
           .then((res) => res.json())
           .then((res) => {
-            console.log(res); // DEBUG
-
             if (res.status === "success") {
-              window.location.href = "index.html";
+              window.location.href = "dashboard.html";
             } else {
-              alertBox.innerHTML = `<div class="alert alert-danger">❌ Username atau password salah</div>`;
+              alertBox.innerHTML =
+                '<div class="alert alert-danger">' +
+                (res.message || "Login gagal") +
+                "</div>";
             }
           })
           .catch((err) => {
             console.error(err);
-            alertBox.innerHTML = `<div class="alert alert-danger">❌ Gagal koneksi ke server</div>`;
+            alertBox.innerHTML =
+              '<div class="alert alert-danger">Gagal koneksi ke server</div>';
           });
       }
     </script>
