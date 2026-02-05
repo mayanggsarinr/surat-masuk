@@ -33,18 +33,21 @@
 
           <!-- FORM -->
           <input type="date" id="tanggal" class="form-control mb-2" required />
+
           <input
             id="nomorSurat"
             class="form-control mb-2"
             placeholder="Nomor Surat"
             required
           />
+
           <input
             id="tujuan"
             class="form-control mb-2"
             placeholder="Tujuan"
             required
           />
+
           <textarea
             id="keterangan"
             class="form-control mb-2"
@@ -52,23 +55,14 @@
             required
           ></textarea>
 
+          <!-- LINK DRIVE -->
           <input
-            type="file"
             id="evidence"
-            class="form-control mb-2"
-            accept="image/*"
-            onchange="previewImage()"
+            class="form-control mb-3"
+            placeholder="Link Google Drive Evidence"
+            value="https://drive.google.com/file/d/1PpHXI1YMMCs5WYXQITY1WeqtfnxC9AYr/view"
             required
           />
-
-          <!-- PREVIEW -->
-          <div class="text-center mb-3">
-            <img
-              id="preview"
-              style="max-width: 100%; display: none"
-              class="rounded border"
-            />
-          </div>
 
           <button
             class="btn btn-primary w-100"
@@ -94,63 +88,41 @@
       function simpan() {
         const btn = document.getElementById("btnSimpan");
         const alertBox = document.getElementById("alertBox");
-        const file = document.getElementById("evidence").files[0];
-
-        if (!file) {
-          alertBox.innerHTML =
-            '<div class="alert alert-warning">Upload bukti dulu</div>';
-          return;
-        }
 
         btn.disabled = true;
         btn.innerText = "Menyimpan...";
 
-        const reader = new FileReader();
-
-        reader.onload = function () {
-          const payload = {
+        fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
             tanggal: tanggal.value,
             nomorSurat: nomorSurat.value,
             tujuan: tujuan.value,
             keterangan: keterangan.value,
-            file: reader.result.split(",")[1],
-            filename: file.name,
-            mimeType: file.type,
-          };
-
-          fetch(API_URL, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-          })
-            .then((r) => r.json())
-            .then((res) => {
-              if (res.status === "success") {
-                alertBox.innerHTML =
-                  '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
-                document.getElementById("tanggal").value = "";
-                document.getElementById("nomorSurat").value = "";
-                document.getElementById("tujuan").value = "";
-                document.getElementById("keterangan").value = "";
-                document.getElementById("evidence").value = "";
-              } else {
-                alertBox.innerHTML = `<div class="alert alert-danger">❌ ${res.message}</div>`;
-              }
-            })
-            .catch((err) => {
+            evidence: evidence.value,
+          }),
+        })
+          .then((r) => r.json())
+          .then((res) => {
+            if (res.status === "success") {
               alertBox.innerHTML =
-                '<div class="alert alert-danger">❌ Koneksi error</div>';
-              console.error(err);
-            })
-            .finally(() => {
-              btn.disabled = false;
-              btn.innerText = "Simpan";
-            });
-        };
-
-        reader.readAsDataURL(file);
+                '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
+            } else {
+              alertBox.innerHTML =
+                '<div class="alert alert-danger">❌ ' + res.message + "</div>";
+            }
+          })
+          .catch(() => {
+            alertBox.innerHTML =
+              '<div class="alert alert-danger">❌ Koneksi error</div>';
+          })
+          .finally(() => {
+            btn.disabled = false;
+            btn.innerText = "Simpan";
+          });
       }
     </script>
   </body>
