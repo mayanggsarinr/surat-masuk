@@ -54,17 +54,9 @@
 
         alertBox.innerHTML = "";
 
-        fetch(URL_API, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            action: "login",
-            username: username,
-            password: password,
-          }),
-        })
+        fetch(
+          `${URL_API}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+        )
           .then((res) => res.json())
           .then((res) => {
             if (res.status === "success") {
@@ -74,9 +66,8 @@
               alertBox.innerHTML = `<div class="alert alert-danger">❌ Username atau password salah</div>`;
             }
           })
-          .catch((err) => {
+          .catch(() => {
             alertBox.innerHTML = `<div class="alert alert-danger">❌ Gagal koneksi ke server</div>`;
-            console.error(err);
           });
       }
     </script>

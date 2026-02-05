@@ -94,35 +94,20 @@
         btn.disabled = true;
         btn.innerText = "Menyimpan...";
 
-        fetch(URL_API, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            action: "insert",
-            tanggal,
-            nomorSurat,
-            tujuan,
-            keterangan,
-          }),
-        })
+        fetch(
+          `${URL_API}?action=insert&tanggal=${tanggal}&nomorSurat=${nomorSurat}&tujuan=${tujuan}&keterangan=${keterangan}`,
+        )
           .then((res) => res.json())
           .then((res) => {
             if (res.status === "success") {
               alertBox.innerHTML = `<div class="alert alert-success">✅ Data berhasil disimpan</div>`;
               form.reset();
             } else {
-              alertBox.innerHTML = `<div class="alert alert-danger">❌ Data gagal disimpan</div>`;
+              alertBox.innerHTML = `<div class="alert alert-danger">❌ Gagal simpan data</div>`;
             }
           })
           .catch(() => {
             alertBox.innerHTML = `<div class="alert alert-danger">❌ Error koneksi</div>`;
-          })
-          .finally(() => {
-            btn.disabled = false;
-            btn.innerText = "Simpan";
-            setTimeout(() => (alertBox.innerHTML = ""), 2000);
           });
       });
     </script>
