@@ -44,17 +44,15 @@
 
     <script>
       function login() {
-        const user = document.getElementById("username").value;
-        const pass = document.getElementById("password").value;
-        const alertBox = document.getElementById("alertBox");
+        const u = document.getElementById("username").value;
+        const p = document.getElementById("password").value;
 
-        // GANTI kalau mau
-        if (user === "admin" && pass === "admin123") {
+        if (u === "admin" && p === "pln123") {
           localStorage.setItem("login", "true");
           location.href = "index.html";
         } else {
-          alertBox.innerHTML =
-            '<div class="alert alert-danger">Username atau password salah</div>';
+          document.getElementById("alertBox").innerHTML =
+            `<div class="alert alert-danger">Username / password salah</div>`;
         }
       }
     </script>
