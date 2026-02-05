@@ -30,34 +30,49 @@
 
           <h4 class="text-center mb-4">Surat Masuk</h4>
 
-          <input type="date" id="tanggal" class="form-control mb-2" />
+          <input type="date" id="tanggal" class="form-control mb-2" required />
           <input
             id="nomorSurat"
             class="form-control mb-2"
             placeholder="Nomor Surat"
+            required
           />
-          <input id="tujuan" class="form-control mb-2" placeholder="Tujuan" />
+          <input
+            id="tujuan"
+            class="form-control mb-2"
+            placeholder="Tujuan"
+            required
+          />
           <textarea
             id="keterangan"
             class="form-control mb-2"
             placeholder="Keterangan"
+            required
           ></textarea>
+
           <input
             type="file"
             id="evidence"
             class="form-control mb-3"
             accept="image/*"
+            required
           />
 
-          <button class="btn btn-primary w-100" onclick="simpan()">
+          <button
+            class="btn btn-primary w-100"
+            id="btnSimpan"
+            onclick="simpan()"
+          >
             Simpan
           </button>
+
           <div id="alertBox" class="mt-3"></div>
         </div>
       </div>
     </div>
 
     <script src="config.js"></script>
+
     <script>
       function logout() {
         localStorage.removeItem("login");
@@ -65,26 +80,53 @@
       }
 
       function simpan() {
+        const btn = document.getElementById("btnSimpan");
+        const alertBox = document.getElementById("alertBox");
         const file = evidence.files[0];
+
+        if (!file) {
+          alertBox.innerHTML =
+            '<div class="alert alert-warning">Upload bukti dulu</div>';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "Menyimpan...";
+
         const reader = new FileReader();
 
         reader.onload = () => {
+          const formData = new FormData();
+          formData.append("tanggal", tanggal.value);
+          formData.append("nomorSurat", nomorSurat.value);
+          formData.append("tujuan", tujuan.value);
+          formData.append("keterangan", keterangan.value);
+          formData.append("file", reader.result.split(",")[1]);
+          formData.append("filename", file.name);
+          formData.append("mimeType", file.type);
+
           fetch(API_URL, {
             method: "POST",
-            body: new URLSearchParams({
-              action: "insert",
-              tanggal: tanggal.value,
-              nomorSurat: nomorSurat.value,
-              tujuan: tujuan.value,
-              keterangan: keterangan.value,
-              file: reader.result.split(",")[1],
-              filename: file.name,
-              mimeType: file.type,
-            }),
+            body: formData,
           })
             .then((r) => r.json())
-            .then(() => {
-              alertBox.innerHTML = `<div class="alert alert-success">Data berhasil disimpan</div>`;
+            .then((res) => {
+              if (res.status === "success") {
+                alertBox.innerHTML =
+                  '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
+                document.querySelector("form")?.reset();
+              } else {
+                alertBox.innerHTML =
+                  '<div class="alert alert-danger">❌ Gagal menyimpan</div>';
+              }
+            })
+            .catch(() => {
+              alertBox.innerHTML =
+                '<div class="alert alert-danger">❌ Koneksi error</div>';
+            })
+            .finally(() => {
+              btn.disabled = false;
+              btn.innerText = "Simpan";
             });
         };
 
