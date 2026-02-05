@@ -25,7 +25,7 @@
       <div class="card shadow mx-auto" style="max-width: 500px">
         <div class="card-body">
           <div class="text-center mb-3">
-            <img src="LOGO_PLN-UL.jpeg" width="180" />
+            <img src="l" width="180" />
           </div>
 
           <h4 class="text-center mb-4">Surat Masuk</h4>
@@ -85,10 +85,14 @@
 
         btn.disabled = true;
         btn.innerText = "Menyimpan...";
+        alertBox.innerHTML = "";
 
         fetch(API_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             tanggal: tanggal.value,
             nomorSurat: nomorSurat.value,
@@ -100,13 +104,16 @@
           .then((res) => res.json())
           .then((res) => {
             if (res.status === "success") {
-              alertBox.innerHTML = `<div class="alert alert-success">✅ Data berhasil disimpan</div>`;
+              alertBox.innerHTML =
+                '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
             } else {
-              alertBox.innerHTML = `<div class="alert alert-danger">${res.message}</div>`;
+              alertBox.innerHTML =
+                '<div class="alert alert-danger">' + res.message + "</div>";
             }
           })
           .catch((err) => {
-            alertBox.innerHTML = `<div class="alert alert-danger">❌ Koneksi error</div>`;
+            alertBox.innerHTML =
+              '<div class="alert alert-danger">❌ Koneksi error</div>';
             console.error(err);
           })
           .finally(() => {
