@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <title>Surat Masuk</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -25,58 +24,50 @@
 
       <div class="card shadow mx-auto" style="max-width: 500px">
         <div class="card-body">
-          <h4 class="text-center mb-4">Input Surat Masuk</h4>
+          <div class="text-center mb-3">
+            <img src="LOGO_PLN-UL.jpeg" width="200" />
+          </div>
 
-          <form id="formSurat">
-            <input type="date" id="tanggal" class="form-control mb-2" />
-            <input
-              id="nomorSurat"
-              class="form-control mb-2"
-              placeholder="Nomor Surat"
-            />
-            <input id="tujuan" class="form-control mb-2" placeholder="Tujuan" />
-            <textarea
-              id="keterangan"
-              class="form-control mb-2"
-              placeholder="Keterangan"
-            ></textarea>
+          <h4 class="text-center mb-4">Surat Masuk</h4>
 
-            <input
-              type="file"
-              id="evidence"
-              class="form-control mb-3"
-              accept="image/*"
-            />
+          <input type="date" id="tanggal" class="form-control mb-2" />
+          <input
+            id="nomorSurat"
+            class="form-control mb-2"
+            placeholder="Nomor Surat"
+          />
+          <input id="tujuan" class="form-control mb-2" placeholder="Tujuan" />
+          <textarea
+            id="keterangan"
+            class="form-control mb-2"
+            placeholder="Keterangan"
+          ></textarea>
+          <input
+            type="file"
+            id="evidence"
+            class="form-control mb-3"
+            accept="image/*"
+          />
 
-            <button class="btn btn-primary w-100" id="btnSubmit">Simpan</button>
-          </form>
-
+          <button class="btn btn-primary w-100" onclick="simpan()">
+            Simpan
+          </button>
           <div id="alertBox" class="mt-3"></div>
         </div>
       </div>
     </div>
 
     <script src="config.js"></script>
-
     <script>
       function logout() {
         localStorage.removeItem("login");
         location.href = "login.html";
       }
 
-      const form = document.getElementById("formSurat");
-      const btn = document.getElementById("btnSubmit");
-      const alertBox = document.getElementById("alertBox");
-
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-
+      function simpan() {
         const file = evidence.files[0];
-
-        btn.disabled = true;
-        btn.innerText = "Menyimpan...";
-
         const reader = new FileReader();
+
         reader.onload = () => {
           fetch(API_URL, {
             method: "POST",
@@ -86,23 +77,19 @@
               nomorSurat: nomorSurat.value,
               tujuan: tujuan.value,
               keterangan: keterangan.value,
-              file: file ? reader.result.split(",")[1] : "",
-              filename: file ? file.name : "",
-              mimeType: file ? file.type : "",
+              file: reader.result.split(",")[1],
+              filename: file.name,
+              mimeType: file.type,
             }),
           })
             .then((r) => r.json())
             .then(() => {
-              btn.disabled = false;
-              btn.innerText = "Simpan";
-              alertBox.innerHTML = `<div class="alert alert-success">✅ Data berhasil disimpan</div>`;
-              form.reset();
+              alertBox.innerHTML = `<div class="alert alert-success">Data berhasil disimpan</div>`;
             });
         };
 
-        if (file) reader.readAsDataURL(file);
-        else reader.onload();
-      });
+        reader.readAsDataURL(file);
+      }
     </script>
   </body>
 </html>

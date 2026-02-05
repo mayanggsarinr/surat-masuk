@@ -10,53 +10,35 @@
     />
   </head>
 
-  <body class="bg-light">
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-4">
-          <div class="card shadow">
-            <div class="card-body">
-              <h5 class="text-center mb-4">Login Surat Masuk</h5>
-
-              <input
-                id="username"
-                class="form-control mb-2"
-                placeholder="Username"
-              />
-              <input
-                id="password"
-                type="password"
-                class="form-control mb-3"
-                placeholder="Password"
-              />
-
-              <button class="btn btn-primary w-100" onclick="login()">
-                Login
-              </button>
-
-              <div id="alertBox" class="mt-3"></div>
-            </div>
-          </div>
-        </div>
+  <body
+    class="bg-light d-flex align-items-center justify-content-center vh-100"
+  >
+    <div class="card shadow p-4" style="width: 360px">
+      <div class="text-center mb-3">
+        <img src="LOGO_PLN-UL.jpeg" width="180" />
       </div>
+
+      <h5 class="text-center mb-3">Login Surat Masuk</h5>
+
+      <input id="username" class="form-control mb-2" placeholder="Username" />
+      <input
+        id="password"
+        type="password"
+        class="form-control mb-3"
+        placeholder="Password"
+      />
+
+      <button class="btn btn-primary w-100" onclick="login()">Login</button>
+      <div id="alertBox" class="mt-3"></div>
     </div>
 
     <script src="config.js"></script>
-
     <script>
       function login() {
-        const username = username.value.trim();
-        const password = password.value.trim();
-        const alertBox = document.getElementById("alertBox");
+        const u = username.value.trim();
+        const p = password.value.trim();
 
-        if (!username || !password) {
-          alertBox.innerHTML = `<div class="alert alert-danger">Username & password wajib diisi</div>`;
-          return;
-        }
-
-        fetch(
-          `${API_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
-        )
+        fetch(`${API_URL}?action=login&username=${u}&password=${p}`)
           .then((r) => r.json())
           .then((r) => {
             if (r.status === "success") {
