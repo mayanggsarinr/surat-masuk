@@ -91,38 +91,10 @@
         location.href = "login.html";
       }
 
-      function previewImage() {
-        const file = evidence.files[0];
-        const preview = document.getElementById("preview");
-
-        if (!file) {
-          preview.style.display = "none";
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          preview.src = reader.result;
-          preview.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-      }
-
       function simpan() {
         const btn = document.getElementById("btnSimpan");
         const alertBox = document.getElementById("alertBox");
-        const file = evidence.files[0];
-
-        if (
-          !tanggal.value ||
-          !nomorSurat.value ||
-          !tujuan.value ||
-          !keterangan.value
-        ) {
-          alertBox.innerHTML =
-            '<div class="alert alert-warning">Lengkapi semua data</div>';
-          return;
-        }
+        const file = document.getElementById("evidence").files[0];
 
         if (!file) {
           alertBox.innerHTML =
@@ -135,7 +107,7 @@
 
         const reader = new FileReader();
 
-        reader.onload = () => {
+        reader.onload = function () {
           const payload = {
             tanggal: tanggal.value,
             nomorSurat: nomorSurat.value,
@@ -148,7 +120,9 @@
 
           fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(payload),
           })
             .then((r) => r.json())
@@ -156,22 +130,19 @@
               if (res.status === "success") {
                 alertBox.innerHTML =
                   '<div class="alert alert-success">✅ Data berhasil disimpan</div>';
-
-                // reset form
-                tanggal.value = "";
-                nomorSurat.value = "";
-                tujuan.value = "";
-                keterangan.value = "";
-                evidence.value = "";
-                preview.style.display = "none";
+                document.getElementById("tanggal").value = "";
+                document.getElementById("nomorSurat").value = "";
+                document.getElementById("tujuan").value = "";
+                document.getElementById("keterangan").value = "";
+                document.getElementById("evidence").value = "";
               } else {
-                alertBox.innerHTML =
-                  '<div class="alert alert-danger">❌ Gagal menyimpan</div>';
+                alertBox.innerHTML = `<div class="alert alert-danger">❌ ${res.message}</div>`;
               }
             })
-            .catch(() => {
+            .catch((err) => {
               alertBox.innerHTML =
                 '<div class="alert alert-danger">❌ Koneksi error</div>';
+              console.error(err);
             })
             .finally(() => {
               btn.disabled = false;
